@@ -1,35 +1,43 @@
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
 app.use(cors());
-const userController = require('./controller/userController');
+require('dotenv').config();
 
-const hostName = 'localhost';
-const port = 5000;
+const hostName = process.env.HOST || 'localhost';
+const port = process.env.PORT || 8000;
 
-// Middleware để phân tích cú pháp JSON
 app.use(express.json());
-// app.use('/api', routes);
+app.listen(port, hostName, () => {});
 
-app.listen(port, hostName, () => {
-    // console.log(`Server is running at aaassss http://${hostName}:${port}`);
-});
-
-
-
+const uri = process.env.MONGO_URI ||'mongodb+srv://anhphi_3405:phi30042005@cluster0.qtls4.mongodb.net/md3405';
 const mongoose = require('mongoose');
 
 const connectDb = async ()=>{
     await mongoose.connect(uri );
+    console.log('Database connected');
 }
 connectDb();
+
+console.log('server is running');
+
+// Routes
+app.use('/api', require('./route/userRouter'));
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('/' , (req, res) =>{
     res.send('Hello World');
 })
 
-app.post('/user' , async (req, res) =>{
-    return userController.createUser(req, res);
-})
 
