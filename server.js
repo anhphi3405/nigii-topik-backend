@@ -3,10 +3,12 @@ const app = express();
 const cors = require('cors');
 app.use(cors());
 require('dotenv').config();
-
+const configExpress = require('./config/configExpress');
+const authRouter = require('./route/authRouter');
+const userRouter = require('./route/userRouter');
 const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
-
+configExpress(app);
 app.use(express.json());
 app.listen(port, hostName, () => {});
 
@@ -22,7 +24,10 @@ connectDb();
 console.log('server is running');
 
 // Routes
-app.use('/api', require('./route/userRouter'));
+app.use("/v1/auth", authRouter);
+app.use("/v1/user", userRouter);
+
+
 
 
 
