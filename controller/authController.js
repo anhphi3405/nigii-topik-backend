@@ -94,7 +94,7 @@ const authController = {
                     path : "/",
                     sameSite: "strict",
                 });
-                res.status(200).json({accessToken: newAccessToken});
+                res.status(200).json(...user, newAccessToken);
             }
         })
     },

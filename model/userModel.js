@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         default: 'user'
+    },
+    exam_in_progress:{
+        type: [mongoose.Schema.Types.ObjectId],
+        default : []
+    },
+    exam_completed:{
+        type: [mongoose.Schema.Types.ObjectId],
+        default : []
     }
 });
 
