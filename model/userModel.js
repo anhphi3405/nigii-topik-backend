@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
-    exam_in_progress:{
+    exams_in_progress:{
         type: [mongoose.Schema.Types.ObjectId],
         default : []
     },
-    exam_completed:{
+    exams_is_completed:{
         type: [mongoose.Schema.Types.ObjectId],
         default : []
     }

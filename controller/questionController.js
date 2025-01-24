@@ -1,32 +1,59 @@
 const Questions = require('../model/questionModel');
-const multer = require('multer');
-const path = require('path');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Thư mục lưu trữ tệp
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Đặt tên tệp
-    }
-});
-
-const upload = multer({ storage: storage });
+const Exams = require('../model/examModel');
 const questionController = {
     createQuestion: async (req, res) => {
         try {
-            const { question, options, correct_answer } = req.body;
+            const { question_text, options, correct_answer, question_img } = req.body;
             console.log(req.body);
-            const audio = req.file ? req.file.path : null; // Lấy đường dẫn tệp âm thanh nếu có
-
+            if(!question_text && !question_img) {
+                return res.status(400).json({ message: 'Please provide question text or image' });
+            }
             const newQuestion = new Questions({
-                question,
-                audio,
+                question_text,
                 options,
-                correct_answer
+                correct_answer,
+                question_img
             });
 
             await newQuestion.save();
             res.status(201).json(newQuestion);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+    updateQuestion: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const { question, options, correct_answer} = req.body;
+            const updatedQuestion = await Questions.findByIdAndUpdate(id, { question, options, correct_answer});
+            updatedQuestion.save();
+            res.status(200).json(updatedQuestion);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+    uploadAudio : async (req, res) => {
+        console.log(req.file);
+        res.json({file: req.file});
+        
+    },
+    getAudio : async (req, res) => {
+        //s
+    },
+    createMultipleQuestions: async (req, res) => {
+        try {
+            const questions = req.body.questions;
+            const examId = req.body.examId;
+            const newQuestions = await Questions.insertMany(questions);
+            if(examId) {
+                const exam = await Exams.findById(examId);
+                if(!exam) {
+                    return res.status(404).json({ message: 'Exam not found' });
+                }
+                exam.questions.push(...newQuestions.map(q => q._id));
+                await exam.save();
+            }
+            res.status(201).json(newQuestions);
         } catch (error) {
             res.status(400).json({ message: error.message });
         }

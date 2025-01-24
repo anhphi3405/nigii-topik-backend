@@ -7,6 +7,7 @@ const configExpress = require('./config/configExpress');
 const authRouter = require('./route/authRouter');
 const userRouter = require('./route/userRouter');
 const questionRouter = require('./route/questionRouter');
+const examRouter = require('./route/examRouter');
 const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
 configExpress(app);
@@ -28,7 +29,7 @@ connectDb();
 app.use("/v1/auth", authRouter);
 app.use("/v1/user", userRouter);
 app.use("/v1/question", questionRouter);
-
+app.use("/v1/exam", examRouter);
 
 
 
