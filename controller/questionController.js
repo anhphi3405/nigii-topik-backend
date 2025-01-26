@@ -1,5 +1,14 @@
 const Questions = require('../model/questionModel');
 const Exams = require('../model/examModel');
+const mongoose = require('mongoose');
+let bucket;
+(() => {
+  mongoose.connection.on("connected", () => {
+    bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: "uploads",
+    });
+  });
+})();
 const questionController = {
     createQuestion: async (req, res) => {
         try {
@@ -32,13 +41,17 @@ const questionController = {
             res.status(400).json({ message: error.message });
         }
     },
-    uploadAudio : async (req, res) => {
-        console.log(req.file);
-        res.json({file: req.file});
-        
-    },
-    getAudio : async (req, res) => {
-        //s
+    deleteQuestion: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const question = await Questions.findByIdAndDelete(id);
+            if(!question) {
+                return res.status(404).json({ message: 'Question not found' });
+            }
+            res.status(200).json({ message: 'Question deleted successfully' });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
     },
     createMultipleQuestions: async (req, res) => {
         try {
@@ -61,4 +74,3 @@ const questionController = {
 }
 
 module.exports = questionController;
-

@@ -1,9 +1,8 @@
 const questionController = require('../controller/questionController');
-
 const router = require('express').Router();
-const upload = require('../config/multerConfig');
 router.post('/create', questionController.createQuestion);
-router.post('/upload/:questionId', upload.single('file'), questionController.uploadAudio);
 router.put('/update/:id', questionController.updateQuestion);
+// createMultiple truyen vao body examId de add questions vao exam
 router.post('/createMultiple', questionController.createMultipleQuestions);
+router.delete('/delete/:id', questionController.deleteQuestion);
 module.exports = router;

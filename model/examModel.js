@@ -5,12 +5,10 @@ const examSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    questions: {
-        type: [mongoose.Schema.Types.ObjectId],
-        required: true,
-        ref : 'Questions'
-        ,default : []
-    },
+    questions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Questions'
+    }],
     createAt : {
         type: Date,
         default: Date.now
