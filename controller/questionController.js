@@ -54,7 +54,7 @@ const questionController = {
         }
     },
     createMultipleQuestions: async (req, res) => {
-        try {
+        try {//
             const questions = req.body.questions;
             const examId = req.body.examId;
             const newQuestions = await Questions.insertMany(questions);

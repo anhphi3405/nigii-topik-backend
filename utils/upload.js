@@ -10,7 +10,7 @@ function upload() {
     file: (req, file) => {
       return new Promise((resolve, _reject) => {
         const fileInfo = {
-          filename: req.params.question_id + path.extname(file.originalname),
+          filename: file.originalname,
           bucketName: "uploads",
         };
         resolve(fileInfo);
