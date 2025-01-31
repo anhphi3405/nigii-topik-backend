@@ -11,12 +11,8 @@ const examSessionSchema = new mongoose.Schema({
         required: true,
         ref : 'Exams'
     },
-    start_time : {
-        type: Date,
-        required: true
-    },
-    end_time : {
-        type: Date,
+    time : {
+        type: Number,
         required: true
     },
     score : {

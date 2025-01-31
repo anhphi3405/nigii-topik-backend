@@ -58,6 +58,14 @@ const examSessionController = {
         catch (error) {
             res.status(400).send(error);
         }
+    },
+    deleteAll: async (req, res) => {
+        try {
+            await ExamSessions.deleteMany();
+            res.status(200).send('All exam sessions deleted successfully');
+        } catch (error) {
+            res.status(400).send(error);
+        }
     }
 };
 

@@ -12,10 +12,8 @@ const questionRouter = require('./route/questionRouter');
 const examRouter = require('./route/examRouter');
 const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
-const MONGO_URI = process.env.MONGO_URI;
-const Questions = require('./model/questionModel');
-
-
+const answerRouter = require('./route/answerRouter');
+const examSessionRouter = require('./route/examSessionRouter');
 
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -42,7 +40,8 @@ app.use("/v1/auth", authRouter);
 app.use("/v1/user", userRouter);
 app.use("/v1/question", questionRouter);
 app.use("/v1/exam", examRouter);
-
+app.use("/v1/answer", answerRouter);
+app.use("/v1/exam_session", examSessionRouter);
 
 
 

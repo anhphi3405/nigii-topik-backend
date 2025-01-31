@@ -32,6 +32,14 @@ const answerController = {
             res.status(400).json({ message: error.message });
         }
     },
+    deleteAll : async (req, res) => {
+        try {
+            await Answers.deleteMany();
+            res.status(200).json({ message: 'All answers deleted successfully' });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 };
 
 module.exports = answerController;
