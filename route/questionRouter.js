@@ -5,4 +5,5 @@ router.put('/update/:id', questionController.updateQuestion);
 // createMultiple truyen vao body examId de add questions vao exam
 router.post('/create_multiple', questionController.createMultipleQuestions);
 router.delete('/delete/:id', questionController.deleteQuestion);
-module.exports = router;
+router.delete('/delete_all', questionController.deleteAll);
+module.exports = router;//

@@ -1,14 +1,5 @@
 const Questions = require('../model/questionModel');
 const Exams = require('../model/examModel');
-const mongoose = require('mongoose');
-let bucket;
-(() => {
-  mongoose.connection.on("connected", () => {
-    bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-      bucketName: "uploads",
-    });
-  });
-})();
 const questionController = {
     createQuestion: async (req, res) => {
         try {
@@ -33,8 +24,8 @@ const questionController = {
     updateQuestion: async (req, res) => {
         const id = req.params.id;
         try {
-            const { question, options, correct_answer} = req.body;
-            const updatedQuestion = await Questions.findByIdAndUpdate(id, { question, options, correct_answer});
+            const { question, options, correct_answer, question_file} = req.body;
+            const updatedQuestion = await Questions.findByIdAndUpdate(id, { question, options, correct_answer, question_file }, { new: true });
             updatedQuestion.save();
             res.status(200).json(updatedQuestion);
         } catch (error) {
@@ -54,7 +45,7 @@ const questionController = {
         }
     },
     createMultipleQuestions: async (req, res) => {
-        try {//
+        try {
             const questions = req.body.questions;
             const examId = req.body.examId;
             const newQuestions = await Questions.insertMany(questions);
@@ -70,7 +61,15 @@ const questionController = {
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
-    }
+    },
+    deleteAll : async (req, res) => {
+        try {
+            await Questions.deleteMany();
+            res.status(200).json({ message: 'All questions deleted successfully' });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
 }
 
 module.exports = questionController;

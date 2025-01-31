@@ -26,6 +26,10 @@ const examSessionSchema = new mongoose.Schema({
     is_completed : {
         type: Boolean,
         default: false
+    },
+    user_answers : {
+        type: [mongoose.Schema.Types.ObjectId],
+        default : []
     }
 });
 

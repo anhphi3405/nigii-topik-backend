@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const answerSchema = new mongoose.Schema({
-    sessionId : {
+    session_id : {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref : 'ExamSessions'
     },
-    questionsId : {
+    question_id : {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref : 'Questions'

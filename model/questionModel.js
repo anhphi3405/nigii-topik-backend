@@ -18,6 +18,11 @@ const questionSchema = new mongoose.Schema({
         type : String,
         require : false,
         default : ''
+    },
+    question_file: {
+        type : mongoose.Schema.Types.ObjectId,
+        require : false,
+        default : null
     }
 });
 

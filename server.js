@@ -13,6 +13,7 @@ const examRouter = require('./route/examRouter');
 const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI;
+const Questions = require('./model/questionModel');
 
 
 
@@ -56,7 +57,7 @@ let bucket;
   });
 })();
 
-app.post("/upload/file", upload().single("file"), async (req, res) => {
+app.post("/upload/file/:questionId", upload().single("file"), async (req, res) => {
     try {
       res.status(201).json({ text: "File uploaded successfully !" });
     } catch (error) {
@@ -66,16 +67,6 @@ app.post("/upload/file", upload().single("file"), async (req, res) => {
       });
     }
   });//
-  app.post("/upload/files", upload().array("files"), async (req, res) => {
-    try {
-      res.status(201).json({ text: "Files uploaded successfully !" });
-    } catch (error) {
-      console.log(error);//
-      res.status(400).json({
-        error: { text: `Unable to upload files`, error },
-      });
-    }
-  });
 
   app.get("/download/files/:fileId", async (req, res) => {
     try {
@@ -134,6 +125,18 @@ app.post("/upload/file", upload().single("file"), async (req, res) => {
     }
   });
 
+  app.delete("/delete/files", async (req, res) => {
+    try {
+      await bucket.drop();
+      res.status(200).json({ text: "Files deleted successfully !" });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        error: { text: `Unable to delete files`, error },
+      });
+    }
+  }
+  );
 
 
 
