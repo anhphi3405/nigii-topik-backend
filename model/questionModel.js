@@ -10,20 +10,28 @@ const questionSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
-    correct_answer: {
-        type: String,
+    correct_option: {
+        type: Number,
         required: true
     },
     question_img : {
+        type : [String],
+        require : false
+    },
+    question_audio: {
+        type : mongoose.Schema.Types.ObjectId,
+        require : false,
+        default : null
+    },
+    question_order : {
+        type : Number,
+        require :false
+    },
+    explanation : {
         type : String,
         require : false,
         default : ''
     },
-    question_file: {
-        type : mongoose.Schema.Types.ObjectId,
-        require : false,
-        default : null
-    }
 });
 
 module.exports = mongoose.model('Questions', questionSchema);
