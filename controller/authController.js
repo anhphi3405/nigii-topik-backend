@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Users = require('../model/userModel');
 const jwt = require('jsonwebtoken');
+const sendMail = require('../utils/sendmail');
 let refreshTokens = [];
 const authController = {
     registerUser: async (req, res) => {
@@ -23,7 +24,21 @@ const authController = {
             res.status(500).json({ message: error.message });
         }
     },
-
+    registerByEmail : async (req, res) => {
+        const subject = 'Your Verification Code';
+        const html = `
+            <div style="font-family: Arial, sans-serif; text-align: center;">
+                <h2>Verification Code</h2>
+                <p>Thank you for signing up! Your verification code is:</p>
+                <p style="font-size: 24px; font-weight: bold;">${req.body.code}</p>
+                <p>Please enter this code to verify your email address.</p>
+                <br>
+                <p>If you did not request this code, please ignore this email.</p>
+            </div>
+        `;
+        const text = `Thank you for signing up! Your verification code is: ${req.body.code}. Please enter this code to verify your email address. If you did not request this code, please ignore this email.`;
+        sendMail(req.body.email, subject, text, html);
+    },
     generateAccessToken:  (user) => {
         const generatedToken = jwt.sign(
             {
