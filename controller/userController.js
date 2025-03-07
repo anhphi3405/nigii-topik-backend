@@ -43,8 +43,10 @@ const userController = {
             console.log("failed to update user");
             res.status(400).json({message: error.message});
         }
+    },
+    checkCode : async (req,res) =>{
+        const {code} = req.body;
+        
     }
 }
-
-
 module.exports = userController;

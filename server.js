@@ -14,7 +14,7 @@ const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
 const answerRouter = require('./route/answerRouter');
 const examSessionRouter = require('./route/examSessionRouter');
-
+const connectRedis = require('./utils/connect_redis');
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -22,6 +22,7 @@ app.use(cookieParser());
 app.use(methodOverride('_method'));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.listen(port, hostName, () => {});
+
 
 
 const uri = process.env.MONGO_URI;// ss
@@ -34,7 +35,10 @@ const connectDb = async ()=>{
 
 
 connectDb();
+connectRedis();
 
+
+//
 // Routes
 app.use("/v1/auth", authRouter);
 app.use("/v1/user", userRouter);
