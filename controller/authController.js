@@ -25,18 +25,27 @@ const authController = {
         }
     },
     registerByEmail : async (req, res) => {
+        const {email, code} = req.body;
+        const createClient = require('redis').createClient;
+        const client = await createClient()
+        .on('error', err => console.log('Redis Client Error', err))
+        .connect();
+        const time = Date.now();
+        await client.set('code', code);
+        await client.set('time', time);
+        await client.set('email', email);
         const subject = 'Your Verification Code';
-        const html = `
+        const html = `000
             <div style="font-family: Arial, sans-serif; text-align: center;">
                 <h2>Verification Code</h2>
                 <p>Thank you for signing up! Your verification code is:</p>
-                <p style="font-size: 24px; font-weight: bold;">${req.body.code}</p>
+                <p style="font-size: 24px; font-weight: bold;">${code}</p>
                 <p>Please enter this code to verify your email address.</p>
                 <br>
                 <p>If you did not request this code, please ignore this email.</p>
             </div>
         `;
-        const text = `Thank you for signing up! Your verification code is: ${req.body.code}. Please enter this code to verify your email address. If you did not request this code, please ignore this email.`;
+        const text = `Thank you for signing up! Your verification code is: ${code}. Please enter this code to verify your email address. If you did not request this code, please ignore this email.`;
         sendMail(req.body.email, subject, text, html);
     },
     generateAccessToken:  (user) => {
@@ -117,6 +126,30 @@ const authController = {
         res.clearCookie("refreshToken");
         refreshTokens = refreshTokens.filter(token => token !== req.cookies.refreshToken);
         res.status(200).json({message: "User logged out"});
+    }
+    ,
+    checkCode : async (req,res) =>{
+        const createClient = require('redis').createClient;
+        const client = await createClient()
+        .on('error', err => console.log('Redis Client Error', err))
+        .connect();
+        const {code} = req.body;
+        const time = await client.get('time');
+        if(Date.now() - time > 600000){
+            res.status(400).json({message: "Time out"});
+        }
+        const savedCode = await client.get('code');
+        if(code === savedCode){
+            res.status(200).json({message: "Code is correct"});
+            const email = await client.get('email');
+            await client.del('code');
+            await client.del('time');
+            const newUser = new Users({email});
+            await newUser.save();
+        }
+        else{
+            res.status(400).json({message: "Code is incorrect"});
+        }
     }
 }
 

@@ -14,7 +14,6 @@ const hostName = process.env.HOST || 'localhost';
 const port = process.env.PORT || 8000;
 const answerRouter = require('./route/answerRouter');
 const examSessionRouter = require('./route/examSessionRouter');
-const connectRedis = require('./utils/connect_redis');
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -35,7 +34,7 @@ const connectDb = async ()=>{
 
 
 connectDb();
-connectRedis();
+
 
 
 //

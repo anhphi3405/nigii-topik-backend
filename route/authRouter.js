@@ -14,4 +14,6 @@ router.post('/refresh', authController.requestRefreshToken);
 
 router.post('/logout',auth.verifyToken ,authController.userLogout);
 
+router.post('/checkcode', authController.checkCode);
+
 module.exports = router;
