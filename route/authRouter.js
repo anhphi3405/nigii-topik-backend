@@ -16,4 +16,8 @@ router.post('/logout',auth.verifyToken ,authController.userLogout);
 
 router.post('/checkcode', authController.checkCode);
 
+router.post('/loginByEmail', authController.loginByEmail);
+
+router.post('/checkLoginCode', authController.checkLoginCode);
+
 module.exports = router;

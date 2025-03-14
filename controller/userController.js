@@ -42,24 +42,6 @@ const userController = {
             console.log("failed to update user");
             res.status(400).json({message: error.message});
         }
-    },
-    checkCode : async (req,res) =>{
-        const createClient = require('redis').createClient;
-        const client = await createClient()
-        .on('error', err => console.log('Redis Client Error', err))
-        .connect();
-        const {code} = req.body;
-        const time = await client.get('time');
-        if(Date.now() - time > 600000){
-            res.status(400).json({message: "Time out"});
-        }
-        const savedCode = await client.get('code');
-        if(code === savedCode){
-            res.status(200).json({message: "Code is correct"});
-        }
-        else{
-            res.status(400).json({message: "Code is incorrect"});
-        }
     }
 }
 module.exports = userController;
