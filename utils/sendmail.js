@@ -10,7 +10,6 @@ const sendMail = async (email, subject, text, html) => {
                 user : process.env.EMAIL,
                 pass : process.env.PASSWORD
             }
-
         }
         let transporter = nodemailer.createTransport(config);
         //koo

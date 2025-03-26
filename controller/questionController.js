@@ -3,7 +3,7 @@ const Exams = require('../model/examModel');
 const questionController = {
     createQuestion: async (req, res) => {
         try {
-            const { question_text, options, correct_answer, question_img } = req.body;
+            const { question_text, options, correct_option, question_img , examId} = req.body;
             console.log(req.body);
             if(!question_text && !question_img) {
                 return res.status(400).json({ message: 'Please provide question text or image' });
@@ -11,11 +11,21 @@ const questionController = {
             const newQuestion = new Questions({
                 question_text,
                 options,
-                correct_answer,
+                correct_option,
                 question_img
             });
 
             await newQuestion.save();
+            console.log("succeed");
+            if(examId) {
+                const exam = await Exams.findById(examId);
+                if (!exam) {
+                    return res.status(404).json({ message: "Exam not found" });
+                }
+                exam.questions.push(newQuestion._id); // Thêm ID của question vào exam
+                await exam.save();
+                console.log("Question added to exam successfully");
+            }
             res.status(201).json(newQuestion);
         } catch (error) {
             res.status(400).json({ message: error.message });
